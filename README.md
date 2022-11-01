@@ -1,75 +1,58 @@
-# @elrondnetwork/dapp-template
-The __Elrond dApp Template__, built using [React.js](https://reactjs.org/) and [Typescript](https://www.typescriptlang.org/).
-It's a basic implementation of [@elrondnetwork/dapp-core](https://www.npmjs.com/package/@elrondnetwork/dapp-core), providing the basics for Elrond authentication and TX signing.
+# Fortune
 
-See [Dapp template](https://dapp-template.elrond.com/) for live demo.
+Welcome to Fortune, an example HUMAN application that demonstrates how to create and fulfill job requests using the HUMAN protocol.
 
-## Requirements
+> **Warning**
+> For running Fortune with docker-compose you need at least version 1.27.0. Check with command `docker-compose --version`
 
-* Node.js version 12.16.2+
-* Npm version 6.14.4+
+## How it works
 
-## Getting Started
+In this specific usecase a job requester is requesting a fortune prediction from a group of workers (Fortune Tellers). Each Fortune Teller will provide their answers, which will then be verified and settled by a group of Oracles.
 
-The dapp is a client side only project and is built using the [Create React App](https://create-react-app.dev)  scripts.
+## High Level Overview
 
-### Instalation and running
+At a very high level this project consists of 4 main components (smart contracts):
 
-### Step 1. Install modules
+**Launcher (Job Launcher)** - The Job Launcher is factory which creates new escrow contracts. A job requester can then add Job details (as a mainfest) and fund the escrow.
 
-From a terminal, navigate to the project folder and run:
+**Exchange Oracle** - An Ethereum Oracle that interacts with people or bots to fufill the job.
 
-```bash
-npm install
-```
+**Recording Oracle** - An Ethereum Oracle which records the task output and who does what. In this case, the Recording Oracle will receive responses from the Exchange Oracle.
 
-### Step 2. Update environment
+**Reptutation Oracle** - An Ethereum Oracle which pays workers for the jobs performed, based on their reputation within the oracle network. In this case, the Reputation Oracle collects all the responses from the Recording Oracle and pays out the Worker and the Recording Oracle.
 
-Go to `App.tsx` and edit the `environment` variable according to the environment you want the app to run on.
-Valid values are `testnet`, `devnet` or `mainnet`
+### User Persona's in this demo
 
-If you need to edit the network configuration, you can pass in a `customNetworkConfig` object.
-More info about this can be found in [dapp-core documentation](https://github.com/ElrondNetwork/dapp-core)
+**Job Creator/Requester** - The entity/person who wants some work performed.
 
-### Step 3. Running in development mode
+**Worker (Fortune Teller)** - The entity/person who performs the actual work.
 
-In the project folder run:
+## Process Flow
 
-```bash
-npm run start
-```
+### Job Submission and Routing
 
-This will start the React app in development mode, using the configs found in the `config.tsx` file.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. The Job creator creates an escrow, funds it and adds the job manifest (a url with the job details)
+2. Once the job is registered on-chain the Exchange Oracle picks up the job and routes it to workers.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+![Diagram for steps 1 and 2](assets/fortuneflow1.jpg)
 
-### Step 4. Build for testing and production use
+### Job Fulfillment and Answer Quality
 
-A build of the app is necessary to deploy for testing purposes or for production use.
-To build the project run:
+3. Workers perform the task and submit their responses (answers) back to the Exchange Oracle.
+4. The Exchange Oracle passes the responses to the Recording Oracle, which then checks the quality of answers. If the quality is acceptable the answers are then routed to the Reputation Oracle.
 
-```bash
-npm run build
-```
+![Diagram for steps 3 and 4](assets/fortuneflow2.jpg)
 
-## Roadmap
+### Settlement
 
-See the [open issues](https://github.com/ElrondNetwork/dapp-template/issues) for a list of proposed features (and known issues).
+5. The Reputation Oracle calculates a threshold based on certain job request parameters. If the answers pass the threshold it pays workers and updates the reputation scores for each worker.
 
-## Contributing
+![Diagram for steps 4 and 5](assets/fortuneflow3.jpg)
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+## Usage Instructions
 
-One can contribute by creating _pull requests_, or by opening _issues_ for discovered bugs or desired features.
+There are two options to run the example, use our deployed playground example or run the example locally using Docker.
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+# Conclusion
 
-## Developers
-
-The [Elrond Team](https://elrond.com/team/).
+In this example we have demonstrated the steps involved in creating and fulfilling jobs on the HUMAN protocol. This is a very basic example which could easily be extended to other use case's. If you have any problems with the setup or usage of this example, please open an issue and let us know! Feel free to check out the HUMAN github repostory for other useful resources.
