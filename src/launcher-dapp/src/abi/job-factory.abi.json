@@ -1,0 +1,91 @@
+{
+  "buildInfo": {
+    "rustc": {
+      "version": "1.65.0-nightly",
+      "commitHash": "750bd1a7ff3e010611b97ee75d30b7cbf5f3a03c",
+      "commitDate": "2022-09-14",
+      "channel": "Nightly",
+      "short": "rustc 1.65.0-nightly (750bd1a7f 2022-09-14)"
+    },
+    "contractCrate": {
+      "name": "job-factory",
+      "version": "0.1.0",
+      "git_version": "87c455a-modified"
+    },
+    "framework": {
+      "name": "elrond-wasm",
+      "version": "0.35.0"
+    }
+  },
+  "name": "JobFactoryContract",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "token",
+        "type": "EgldOrEsdtTokenIdentifier"
+      },
+      {
+        "name": "job_template_address",
+        "type": "Address"
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "createJob",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "trusted_handlers",
+          "type": "variadic<Address>",
+          "multi_arg": true
+        }
+      ],
+      "outputs": [
+        {
+          "type": "Address"
+        }
+      ]
+    },
+    {
+      "name": "hasJob",
+      "mutability": "readonly",
+      "inputs": [
+        {
+          "name": "address",
+          "type": "Address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "jobs",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "variadic<Address>",
+          "multi_result": true
+        }
+      ]
+    },
+    {
+      "name": "token",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "EgldOrEsdtTokenIdentifier"
+        }
+      ]
+    }
+  ],
+  "events": [],
+  "hasCallback": false,
+  "types": {}
+}
