@@ -13,5 +13,5 @@ app.post('/job/results/', recordResults);
 
 // @ts-ignore
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://${hostname}:${port}`);
+  console.log(`⚡️[Recording Oracle]: Server is running at https://${hostname}:${port}`);
 });

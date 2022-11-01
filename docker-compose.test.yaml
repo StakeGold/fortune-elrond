@@ -1,0 +1,81 @@
+version: '3.7'
+
+services:
+
+  launcher-dapp:
+    container_name: launcher-dapp
+    build:
+      context: ./src/launcher-dapp
+      target: development
+    volumes:
+      - ./src/launcher-dapp:/usr/src/app
+    environment:
+      PORT: 3001,
+      HTTPS: "true"
+    ports:
+      - 3001:3001
+
+  exchange-dapp:
+    container_name: exchange-dapp
+    build:
+      context: ./src/exchange-dapp
+      target: development
+    volumes:
+      - ./src/exchange-dapp:/usr/src/app
+    environment:
+      PORT: 3000
+      HTTPS: "true"
+    ports:
+      - 3000:3000
+
+  recording-oracle-test:
+    container_name: recording-oracle-test
+    build:
+      ./src/recording-oracle
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: 8080
+      NETWORK_ENV: https://testnet-gateway.elrond.com
+    ports:
+      - 8080:8080
+
+  reputation-oracle-test:
+    container_name: reputation-oracle-test
+    build:
+      ./src/reputation-oracle
+    environment:
+      HOSTNAME: 0.0.0.0
+      PORT: 8081
+      NETWORK_ENV: https://testnet-gateway.elrond.com
+    ports:
+      - 8081:8081
+
+  minio-test:
+    image: minio/minio:RELEASE.2022-05-26T05-48-41Z
+    ports:
+      - 9001:9001
+      - 9000:9000
+    environment:
+      MINIO_ROOT_USER: dev
+      MINIO_ROOT_PASSWORD: devdevdev
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  minio-mc:
+    image: minio/mc
+    depends_on:
+      minio-test:
+        condition: service_healthy
+    volumes:
+      - ./docker-test-manifest.json:/tmp/manifests/docker-manifest.json
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://minio-test:9000 dev devdevdev;
+      /usr/bin/mc mb myminio/manifests;
+      /usr/bin/mc anonymous set public myminio/manifests;
+      /usr/bin/mc cp /tmp/manifests/docker-manifest.json myminio/manifests;
+      "
