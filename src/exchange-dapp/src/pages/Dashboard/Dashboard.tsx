@@ -40,7 +40,7 @@ export const Dashboard = () => {
       await axios.post(recordingOracleUrl, payload);
       alert('Your fortune has been submitted');
     } catch (err) {
-      alert(err.response.data.message);
+      alert(err?.response?.data?.message ?? 'Could not submit fortune');
     }
     setFortune('');
   };
