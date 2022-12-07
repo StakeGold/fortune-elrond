@@ -15,7 +15,8 @@ RUN apk add libusb-dev &&\
 # Install app dependencies using the `npm ci` command instead of `npm install`
 COPY package*.json ./
 RUN npm install &&\
-    npm install -g serve
+    npm install -g serve &&\
+    npm install --save webpack-dev-server
 
 # Bundle app source
 COPY . .
@@ -23,4 +24,6 @@ COPY ./config/config.testnet.tsx ./src/config.tsx
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+RUN npm run build
+
+ENTRYPOINT [ "serve", "-s", "build" ]

@@ -15,11 +15,16 @@ RUN apk add libusb-dev &&\
 # Install app dependencies using the `npm ci` command instead of `npm install`
 COPY package*.json ./
 RUN npm install &&\
-    npm install -g serve
+    npm install -g serve &&\
+    npm install --save webpack-dev-server
 
 # Bundle app source
 COPY . .
 
+RUN npm run build
+
 EXPOSE 3001
 
-CMD ["npm", "run", "start"]
+RUN npm run build
+
+ENTRYPOINT [ "serve", "-s", "build" ]

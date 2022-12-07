@@ -45,15 +45,12 @@ export class EscrowService {
 
   async getManifest(): Promise<UrlHashPair> {
     let interaction = <Interaction>this.contract.methods.getManifest();
-
-    let res = await this.performQuery(interaction);
+    let { firstValue } = await this.performQuery(interaction);
 
     return {
-      // @ts-ignore
-      url: res.values.fields[0].name,
-      // @ts-ignore
-      hash: res.values.fields[1].name
-    }
+      url: firstValue?.valueOf().url.toString(),
+      hash: firstValue?.valueOf().hash.toString()
+    };
   }
 
 
