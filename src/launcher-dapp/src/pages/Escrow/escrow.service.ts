@@ -87,6 +87,13 @@ export class EscrowService {
     };
   }
 
+  async getOracles(): Promise<any> {
+    const interaction = <Interaction>this.contract.methods.getOracles();
+    const { firstValue } = await this.performQuery(interaction);
+
+    return firstValue?.valueOf();
+  }
+
   async fundEscrow(amount: number): Promise<{
     success: boolean;
     error: string;
@@ -133,8 +140,6 @@ export class EscrowService {
       .withGasLimit(gasLimit)
       .withChainID(networkConfig.ChainID)
       .buildTransaction();
-
-    console.log(tx);
 
     const txDisplay = {
       processingMessage: 'Setup escrow',

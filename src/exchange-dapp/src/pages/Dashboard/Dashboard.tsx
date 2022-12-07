@@ -15,8 +15,8 @@ export const Dashboard = () => {
     const escrowService = new EscrowService(escrowAddressRaw);
 
     // Set escrow status
-    const escrowStatus = await escrowService.getStatus();
-    setEscrowStatus(escrowStatus);
+    const status = await escrowService.getStatus();
+    setEscrowStatus(status);
 
     // Set escrow balance
     const escrowBalance = await escrowService.getBalance();
@@ -36,12 +36,11 @@ export const Dashboard = () => {
       escrowAddress: escrowAddressRaw,
       fortune: fortune
     };
-    console.log('red -> ', recordingOracleUrl);
     try {
       await axios.post(recordingOracleUrl, payload);
       alert('Your fortune has been submitted');
     } catch (err) {
-      alert('Could not submit fortune');
+      alert(err?.response?.data?.message ?? 'Could not submit fortune');
     }
     setFortune('');
   };

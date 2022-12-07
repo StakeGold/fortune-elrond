@@ -1,10 +1,11 @@
 import { EnvironmentsEnum } from '@elrondnetwork/dapp-core/types';
 
 export const contractAddress =
-  'erd1qqqqqqqqqqqqqpgqzzvu8vtmzsdz78uclhurgsqc0hgy2sql7pyqmfga5n';
+  'erd1qqqqqqqqqqqqqpgqj4vzqxmdfudfanytd0ng8j94pqn35h7e7pyq8pdsjc';
 
 export const dAppName = 'Fortune Launcher';
 export const proxyNetwork = 'https://testnet-gateway.elrond.com';
+export const exchangeUrl = 'https://localhost:3000/';
 
 // Generate your own WalletConnect 2 ProjectId here: https://cloud.walletconnect.com/app
 export const walletConnectV2ProjectId = '9b1a9564f91cb659ffe21b73d5c4e2d8';

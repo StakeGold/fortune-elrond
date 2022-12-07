@@ -12,13 +12,12 @@ import { Layout } from 'components';
 import { apiTimeout, walletConnectV2ProjectId } from 'config';
 import { PageNotFound, Unlock } from 'pages';
 import { mappedRoutes, routeNames } from 'routes';
-import { routes } from 'routes';
 
 export const App = () => {
   return (
     <Router>
       <DappProvider
-        environment={EnvironmentsEnum.devnet}
+        environment={EnvironmentsEnum.testnet}
         customNetworkConfig={{
           name: 'customConfig',
           apiTimeout,

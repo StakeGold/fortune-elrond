@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Address } from '@elrondnetwork/erdjs/out';
 import { BigNumber } from 'bignumber.js';
-import { REC_ORACLE_ADDRESS, REP_ORACLE_ADDRESS } from '../../../config';
+import {
+  REC_ORACLE_ADDRESS,
+  REP_ORACLE_ADDRESS,
+  exchangeUrl
+} from '../../../config';
 import { EscrowService } from '../escrow.service';
+import { config } from 'process';
 
 const Controls = (props: any) => {
   const [recOracleAddr, setRecOracleAddr] = useState(REC_ORACLE_ADDRESS);
@@ -96,19 +101,24 @@ export const View = () => {
   const [manifestUrl, setManifestUrl] = useState('');
   const [finalResultsUrl, setFinalResultsUrl] = useState('');
   const [balance, setBalance] = useState('');
-  const [exchangeUrl, setExchangeUrl] = useState('');
 
   const setMainEscrow = async () => {
     const escrowContract = new EscrowService(escrow);
     const status = await escrowContract.getStatus();
     setEscrowStatus(status);
 
-    const balance = await escrowContract.getBalance();
-    setBalance(balance.toString());
+    const balances = await escrowContract.getBalance();
+    setBalance(balances.toString());
+
+    const oracles = await escrowContract.getOracles();
+    setReputationOracle(oracles.reputation.address.toString());
+    setRecordingOracle(oracles.recording.address.toString());
+    setReputationOracleStake(oracles.reputation.stake.valueOf());
+    setRecordingOracleStake(oracles.recording.stake.valueOf());
 
     const manifest = await escrowContract.getManifest();
+    console.log(manifest);
     setManifestUrl(manifest.url);
-    console.log('here');
 
     const finalResults = await escrowContract.getFinalResults();
     setFinalResultsUrl(finalResults.url);

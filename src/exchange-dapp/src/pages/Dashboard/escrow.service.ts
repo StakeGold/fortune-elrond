@@ -13,8 +13,6 @@ import { proxyNetwork } from '../../config';
 
 const abiRegistry = AbiRegistry.create(escrowAbi);
 const abi = new SmartContractAbi(abiRegistry);
-const networkProxy: string =
-  proxyNetwork || 'https://devnet-gateway.elrond.com';
 
 type UrlHashPair = {
   url: string;
@@ -31,7 +29,7 @@ export class EscrowService {
       address: contractAdress,
       abi
     });
-    this.networkProvider = new ProxyNetworkProvider(networkProxy);
+    this.networkProvider = new ProxyNetworkProvider(proxyNetwork);
   }
 
   async getStatus(): Promise<string> {
@@ -56,12 +54,11 @@ export class EscrowService {
 
   async getManifest(): Promise<UrlHashPair> {
     const interaction = <Interaction>this.contract.methods.getManifest();
-
     const { firstValue } = await this.performQuery(interaction);
 
     return {
-      url: firstValue?.valueOf()?.fields[0].name,
-      hash: firstValue?.valueOf()?.fields[1].name
+      url: firstValue?.valueOf().url.toString(),
+      hash: firstValue?.valueOf().hash.toString()
     };
   }
 

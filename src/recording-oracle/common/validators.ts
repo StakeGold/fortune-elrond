@@ -13,7 +13,7 @@ export function isValidAddress(address: string): boolean {
 }
 
 export function hasValidFortunes(fortunes: any[]) {
-  return fortunes.length > 0
+  return fortunes?.length > 0
 }
 
 export async function hasStatus(contract: EscrowService, required_status: EscrowStatus): Promise<boolean> {
